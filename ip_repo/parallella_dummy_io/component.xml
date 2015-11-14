@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <spirit:component xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <spirit:vendor>k88k</spirit:vendor>
@@ -970,15 +971,8 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>dummy_parallella_io_v1_0</xilinx:displayName>
-      <xilinx:coreRevision>3</xilinx:coreRevision>
-      <xilinx:upgrades>
-        <xilinx:canUpgradeFrom>user.org:user:dummy_parallella_io:1.0</xilinx:canUpgradeFrom>
-      </xilinx:upgrades>
+      <xilinx:coreRevision>1</xilinx:coreRevision>
       <xilinx:coreCreationDateTime>2015-11-11T12:16:57Z</xilinx:coreCreationDateTime>
-      <xilinx:tags>
-        <xilinx:tag xilinx:name="user.org:user:dummy_parallella_io:1.0_ARCHIVE_LOCATION">/home/kirill/ip_repo/parallella_dummy_io</xilinx:tag>
-        <xilinx:tag xilinx:name="k88k:user:dummy_parallella_io:1.0_ARCHIVE_LOCATION">/home/kirill/ip_repo/parallella_dummy_io</xilinx:tag>
-      </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2015.3</xilinx:xilinxVersion>
