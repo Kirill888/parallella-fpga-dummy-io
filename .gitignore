@@ -1,0 +1,5 @@
+vivado.jou
+vivado.log
+*.backup.log
+*.backup.jou
+*~
