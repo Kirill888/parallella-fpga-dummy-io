@@ -46,4 +46,3 @@ bootgen -w -image top.bif -split bin
 rm top.bin
 
 echo "Generated parallella.bit.bin"
-echo " Now copy it to SD card and boot your board"
