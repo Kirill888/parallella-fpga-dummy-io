@@ -3,3 +3,6 @@ vivado.log
 *.backup.log
 *.backup.jou
 *~
+/sample/webtalk.jou
+/sample/webtalk.log
+/sample/.Xil/

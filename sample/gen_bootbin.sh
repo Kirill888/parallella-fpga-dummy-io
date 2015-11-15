@@ -34,7 +34,7 @@ OR
 2. Create a symlink to generated file inside the project
 
    For example like this:
-     ln -s \${project_name}/\${project_name}.runs/impl_1/top.bit parallela.bit
+     project_name=my_mult_test ln -s \${project_name}/\${project_name}.runs/impl_1/top.bit parallela.bit
 
 EOF
 

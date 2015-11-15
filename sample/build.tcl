@@ -8,10 +8,16 @@ if { [info exists ::origin_dir_loc] } {
 
 variable script_file
 set script_file "build.tcl"
-set mode 7020
-set PROJ "empty_project"
-set IP_REPO         [file normalize {../ip_repo}]
-set CONSTRAINTS_DIR [file normalize {../constraints} ]
+
+
+# Custom variable one can override from inside Vivado TCL shell
+# before sourcing this script
+#
+if { ! [info exists PROJECT_NAME   ]} {set PROJECT_NAME    "my_mult_test"}
+if { ! [info exists MODEL          ]} {set MODEL           7020 }
+if { ! [info exists GEN_EMPTY      ]} {set GEN_EMPTY       0}
+if { ! [info exists IP_REPO        ]} {set IP_REPO         [file normalize {../ip_repo}]}
+if { ! [info exists CONSTRAINTS_DIR]} {set CONSTRAINTS_DIR [file normalize {../constraints} ]}
 
 puts "ROOT: [file normalize $origin_dir]"
 puts "IP_REPO: $IP_REPO"
@@ -36,10 +42,11 @@ proc help {} {
   puts "                       origin_dir path value is \".\", otherwise, the value"
   puts "                       that was set with the \"-paths_relative_to\" switch"
   puts "                       when this script was generated.\n"
-  puts " --name <project name> Set project name \n"
-  puts " --7010                  Generate project for 7010 model\n"
-  puts " --7020                  Generate project for 7020 model\n"
-  puts "\[--help\]               Print help information for this script"
+  puts "\[--name <project name>\] Set project name \n"
+  puts "\[--7010\]                Generate project for 7010 model\n"
+  puts "\[--7020\]                Generate project for 7020 model\n"
+  puts "\[--empty\]               Do not include sample custom ip\n"
+  puts "\[--help\]                Print help information for this script"
   puts "-------------------------------------------------------------------------\n"
   exit 0
 }
@@ -49,10 +56,11 @@ if { $::argc > 0 } {
     set option [string trim [lindex $::argv $i]]
     switch -regexp -- $option {
       "--origin_dir" { incr i; set origin_dir [lindex $::argv $i] }
-      "--name"       { incr i; set PROJ [lindex $::argv $i] }
+      "--name"       { incr i; set PROJECT_NAME [lindex $::argv $i] }
       "--help"       { help }
-      "--7010"       { set mode 7010 }
-      "--7020"       { set mode 7020 }
+      "--7010"       { set MODEL 7010 }
+      "--7020"       { set MODEL 7020 }
+      "--empty"      { set GEN_EMPTY 1}
       default {
         if { [regexp {^-} $option] } {
           puts "ERROR: Unknown option '$option' specified, please type '$script_file -tclargs --help' for usage info.\n"
@@ -63,7 +71,7 @@ if { $::argc > 0 } {
   }
 }
 
-if { $mode == 7020 } {
+if { $MODEL == 7020 } {
     puts "Generating for 7020"
     set PART "xc7z020clg400-1"
     set NGPIO 24
@@ -78,13 +86,13 @@ if { $mode == 7020 } {
 
 
 # Create project
-create_project $PROJ ./$PROJ
+create_project $PROJECT_NAME ./$PROJECT_NAME
 
 # Set the directory path for the new project
 set proj_dir [get_property directory [current_project]]
 
 # Set project properties
-set obj [get_projects $PROJ]
+set obj [get_projects $PROJECT_NAME]
 set_property "default_lib" "xil_defaultlib" $obj
 set_property "part" "$PART" $obj
 set_property "sim.ip.auto_export_scripts" "1" $obj
@@ -152,8 +160,13 @@ current_run -implementation [get_runs impl_1]
 
 
 puts "Generating Block Design"
+
 # Create block design
-source $origin_dir/bd_top.tcl
+if { $GEN_EMPTY } {
+    source $origin_dir/bd_top_empty.tcl
+} else {
+    source $origin_dir/bd_top.tcl
+}
 
 # Generate the wrapper
 set design_name [get_bd_designs]
@@ -163,4 +176,4 @@ make_wrapper -files [get_files $design_name.bd] -top -import
 set obj [get_filesets sources_1]
 set_property "top" "top" $obj
 
-puts "INFO: Project created:$PROJ"
+puts "INFO: Project created:$PROJECT_NAME"

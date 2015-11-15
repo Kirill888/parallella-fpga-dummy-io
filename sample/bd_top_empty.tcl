@@ -167,9 +167,6 @@ proc create_root_design { parentCell n_gpio } {
 CONFIG.NUM_GPIO_PAIRS "$n_gpio" \
  ] $dummy_parallella_io_0
 
-  # Create instance: my_multiplier_0, and set properties
-  set my_multiplier_0 [ create_bd_cell -type ip -vlnv kk:user:my_multiplier:1.0 my_multiplier_0 ]
-
   # Create instance: proc_sys_reset_0, and set properties
   set proc_sys_reset_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0 ]
 
@@ -217,16 +214,10 @@ CONFIG.PCW_UIPARAM_DDR_T_RP {9} \
 CONFIG.PCW_UIPARAM_DDR_USE_INTERNAL_VREF {1} \
 CONFIG.PCW_USB0_PERIPHERAL_ENABLE {1} \
 CONFIG.PCW_USB1_PERIPHERAL_ENABLE {1} \
-CONFIG.PCW_USE_M_AXI_GP0 {1} \
+CONFIG.PCW_USE_M_AXI_GP0 {0} \
 CONFIG.PCW_USE_M_AXI_GP1 {0} \
 CONFIG.PCW_USE_S_AXI_HP1 {0} \
  ] $processing_system7_0
-
-  # Create instance: processing_system7_0_axi_periph, and set properties
-  set processing_system7_0_axi_periph [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 processing_system7_0_axi_periph ]
-  set_property -dict [ list \
-CONFIG.NUM_MI {1} \
- ] $processing_system7_0_axi_periph
 
   # Create interface connections
   connect_bd_intf_net -intf_net RX_1 [get_bd_intf_ports RX] [get_bd_intf_pins dummy_parallella_io_0/RX]
@@ -235,8 +226,6 @@ CONFIG.NUM_MI {1} \
   connect_bd_intf_net -intf_net processing_system7_0_FIXED_IO [get_bd_intf_ports FIXED_IO] [get_bd_intf_pins processing_system7_0/FIXED_IO]
   connect_bd_intf_net -intf_net processing_system7_0_GPIO_0 [get_bd_intf_pins dummy_parallella_io_0/GPIO] [get_bd_intf_pins processing_system7_0/GPIO_0]
   connect_bd_intf_net -intf_net processing_system7_0_IIC_0 [get_bd_intf_pins dummy_parallella_io_0/I2C] [get_bd_intf_pins processing_system7_0/IIC_0]
-  connect_bd_intf_net -intf_net processing_system7_0_M_AXI_GP0 [get_bd_intf_pins processing_system7_0/M_AXI_GP0] [get_bd_intf_pins processing_system7_0_axi_periph/S00_AXI]
-  connect_bd_intf_net -intf_net processing_system7_0_axi_periph_M00_AXI [get_bd_intf_pins my_multiplier_0/S00_AXI] [get_bd_intf_pins processing_system7_0_axi_periph/M00_AXI]
 
   # Create port connections
   connect_bd_net -net Net [get_bd_ports GPIO_P] [get_bd_pins dummy_parallella_io_0/GPIO_P]
@@ -246,54 +235,45 @@ CONFIG.NUM_MI {1} \
   connect_bd_net -net dummy_parallella_io_0_CCLK_N [get_bd_ports CCLK_N] [get_bd_pins dummy_parallella_io_0/CCLK_N]
   connect_bd_net -net dummy_parallella_io_0_CCLK_P [get_bd_ports CCLK_P] [get_bd_pins dummy_parallella_io_0/CCLK_P]
   connect_bd_net -net dummy_parallella_io_0_DSP_RESET_N [get_bd_ports DSP_RESET_N] [get_bd_pins dummy_parallella_io_0/DSP_RESET_N]
-  connect_bd_net -net proc_sys_reset_0_interconnect_aresetn [get_bd_pins proc_sys_reset_0/interconnect_aresetn] [get_bd_pins processing_system7_0_axi_periph/ARESETN]
-  connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins my_multiplier_0/s00_axi_aresetn] [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins processing_system7_0_axi_periph/M00_ARESETN] [get_bd_pins processing_system7_0_axi_periph/S00_ARESETN]
-  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins my_multiplier_0/s00_axi_aclk] [get_bd_pins proc_sys_reset_0/slowest_sync_clk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0_axi_periph/ACLK] [get_bd_pins processing_system7_0_axi_periph/M00_ACLK] [get_bd_pins processing_system7_0_axi_periph/S00_ACLK]
+  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins proc_sys_reset_0/slowest_sync_clk] [get_bd_pins processing_system7_0/FCLK_CLK0]
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins processing_system7_0/FCLK_RESET0_N]
 
   # Create address segments
-  create_bd_addr_seg -range 0x1000 -offset 0x70020000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs my_multiplier_0/S00_AXI/S00_AXI_reg] SEG_my_multiplier_0_S00_AXI_reg
 
   # Perform GUI Layout
   regenerate_bd_layout -layout_string {
    guistr: "# # String gsaved with Nlview 6.5.5  2015-06-26 bk=1.3371 VDI=38 GEI=35 GUI=JA:1.8
 #  -string -flagsOSRD
-preplace port RX -pg 1 -y 200 -defaultsOSRD
-preplace port DDR -pg 1 -y 270 -defaultsOSRD
-preplace port CCLK_N -pg 1 -y 380 -defaultsOSRD
-preplace port I2C_SDA -pg 1 -y 460 -defaultsOSRD
-preplace port CCLK_P -pg 1 -y 360 -defaultsOSRD
-preplace port FIXED_IO -pg 1 -y 290 -defaultsOSRD
-preplace port TX -pg 1 -y 340 -defaultsOSRD
-preplace port I2C_SCL -pg 1 -y 480 -defaultsOSRD
-preplace portBus GPIO_N -pg 1 -y 440 -defaultsOSRD
-preplace portBus GPIO_P -pg 1 -y 420 -defaultsOSRD
-preplace portBus DSP_RESET_N -pg 1 -y 400 -defaultsOSRD
-preplace inst my_multiplier_0 -pg 1 -lvl 3 -y 150 -defaultsOSRD
-preplace inst dummy_parallella_io_0 -pg 1 -lvl 2 -y 410 -defaultsOSRD
-preplace inst proc_sys_reset_0 -pg 1 -lvl 1 -y 110 -defaultsOSRD
-preplace inst processing_system7_0_axi_periph -pg 1 -lvl 2 -y 130 -defaultsOSRD
-preplace inst processing_system7_0 -pg 1 -lvl 1 -y 340 -defaultsOSRD
-preplace netloc processing_system7_0_DDR 1 1 3 NJ 270 NJ 270 NJ
-preplace netloc processing_system7_0_axi_periph_M00_AXI 1 2 1 N
-preplace netloc RX_1 1 0 2 NJ 200 NJ
-preplace netloc dummy_parallella_io_0_DSP_RESET_N 1 2 2 NJ 400 NJ
-preplace netloc processing_system7_0_M_AXI_GP0 1 1 1 450
-preplace netloc dummy_parallella_io_0_CCLK_N 1 2 2 NJ 380 NJ
-preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 2 30 20 410
-preplace netloc processing_system7_0_IIC_0 1 1 1 420
-preplace netloc dummy_parallella_io_0_CCLK_P 1 2 2 NJ 360 NJ
-preplace netloc proc_sys_reset_0_interconnect_aresetn 1 1 1 430
-preplace netloc dummy_parallella_io_0_TX 1 2 2 NJ 340 NJ
-preplace netloc processing_system7_0_FIXED_IO 1 1 3 NJ 290 NJ 290 NJ
-preplace netloc proc_sys_reset_0_peripheral_aresetn 1 1 2 470 250 NJ
-preplace netloc processing_system7_0_GPIO_0 1 1 1 430
-preplace netloc Net1 1 2 2 NJ 440 NJ
-preplace netloc Net 1 2 2 NJ 420 NJ
-preplace netloc processing_system7_0_FCLK_CLK0 1 0 3 20 10 440 260 NJ
-preplace netloc Net2 1 2 2 NJ 460 NJ
-preplace netloc Net3 1 2 2 NJ 480 NJ
-levelinfo -pg 1 0 220 620 880 1000 -top 0 -bot 530
+preplace port RX -pg 1 -y 360 -defaultsOSRD
+preplace port DDR -pg 1 -y 70 -defaultsOSRD
+preplace port CCLK_N -pg 1 -y 350 -defaultsOSRD
+preplace port I2C_SDA -pg 1 -y 430 -defaultsOSRD
+preplace port CCLK_P -pg 1 -y 330 -defaultsOSRD
+preplace port FIXED_IO -pg 1 -y 90 -defaultsOSRD
+preplace port TX -pg 1 -y 310 -defaultsOSRD
+preplace port I2C_SCL -pg 1 -y 450 -defaultsOSRD
+preplace portBus GPIO_N -pg 1 -y 410 -defaultsOSRD
+preplace portBus GPIO_P -pg 1 -y 390 -defaultsOSRD
+preplace portBus DSP_RESET_N -pg 1 -y 370 -defaultsOSRD
+preplace inst dummy_parallella_io_0 -pg 1 -lvl 2 -y 380 -defaultsOSRD
+preplace inst proc_sys_reset_0 -pg 1 -lvl 2 -y 180 -defaultsOSRD
+preplace inst processing_system7_0 -pg 1 -lvl 1 -y 130 -defaultsOSRD
+preplace netloc processing_system7_0_DDR 1 1 2 NJ 70 NJ
+preplace netloc RX_1 1 0 2 NJ 360 NJ
+preplace netloc dummy_parallella_io_0_DSP_RESET_N 1 2 1 NJ
+preplace netloc dummy_parallella_io_0_CCLK_N 1 2 1 NJ
+preplace netloc processing_system7_0_FCLK_RESET0_N 1 1 1 280
+preplace netloc processing_system7_0_IIC_0 1 1 1 260
+preplace netloc dummy_parallella_io_0_CCLK_P 1 2 1 NJ
+preplace netloc dummy_parallella_io_0_TX 1 2 1 NJ
+preplace netloc processing_system7_0_FIXED_IO 1 1 2 NJ 90 NJ
+preplace netloc processing_system7_0_GPIO_0 1 1 1 270
+preplace netloc Net1 1 2 1 N
+preplace netloc Net 1 2 1 N
+preplace netloc processing_system7_0_FCLK_CLK0 1 1 1 250
+preplace netloc Net2 1 2 1 NJ
+preplace netloc Net3 1 2 1 NJ
+levelinfo -pg 1 -50 110 470 660 -top 0 -bot 500
 ",
 }
 
