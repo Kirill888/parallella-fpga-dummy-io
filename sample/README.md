@@ -1,7 +1,7 @@
 # Introduction
 
 This project will walk you through creating a custom, minimal FPGA
-project in Vivado for Parallella board. This was tested using
+design in Vivado for Parallella board. This was tested using
 Parallella "Desktop Edition" (7010 based), but the scripts also
 support "Embedded" edition (7020 based), in fact scripts default to
 7020 based model.
@@ -53,7 +53,7 @@ I have created multiplier circuit IP by following this tutorial:
 
 This IP is already included in the project repository, but you are
 encouraged to follow the steps outlined in the article linked above as
-an exercise. Instead of using bare-metal app to test multiplier we
+an exercise. Rather then using bare-metal app to test multiplier we
 will instead use Linux based solution, as it is somewhat easier in the
 case of Parallella board that doesn't have JTAG conveniently exposed.
 
@@ -62,8 +62,8 @@ There are two ways to use provided scripts
 
 Use `gen_project.sh` to run Vivado in batch mode:
 
-   a) `./gen_project.sh --name my_test --7010`
-   b) `./gen_project.sh --name my_test_7020 --7020`
+- `./gen_project.sh --name my_test --7010`
+- `./gen_project.sh --name my_test_7020 --7020`
 
 
 Invoke script from tcl shell of Vivado
