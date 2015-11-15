@@ -80,7 +80,7 @@ something like this:
 
 ![screenshot_of_vivado](../images/vivado_screenshot_with_mult.png)
 
-## Build bitstream
+## Build Bitstream
 
 Assuming everything above worked fine you can now generate Bitstream.
 
@@ -181,7 +181,7 @@ Verify that UIO driver picked up our new my_mult device:
     ls -l /sys/class/uio/uio0/
     cat /sys/class/uio/uio0/name
 
-### Run the test
+### Run the Test
 
 We are getting pretty close to actually seeing our new device in
 action. First we need to compile test app, we will do it directly on
