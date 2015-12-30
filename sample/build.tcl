@@ -41,10 +41,11 @@ if { $::argc > 0 } {
   for {set i 0} {$i < [llength $::argv]} {incr i} {
     set option [string trim [lindex $::argv $i]]
     switch -regexp -- $option {
-      "--origin_dir" { incr i; set origin_dir [lindex $::argv $i] }
+      "--origin_dir" { incr i; set origin_dir   [lindex $::argv $i] }
       "--name"       { incr i; set PROJECT_NAME [lindex $::argv $i] }
-      "--base"	     { incr i; set BASE [lindex $::argv $i] }
-      "--repo"       { incr i; set IP_REPO [lindex $::argv $i] }
+      "--base"	     { incr i; set BASE         [lindex $::argv $i] }
+      "--repo"       { incr i; set IP_REPO      [lindex $::argv $i] }
+      "--bd"         { incr i; set BD           [lindex $::argv $i] }
       "--help"       { help }
       "--7010"       { set MODEL 7010  }
       "--7020"       { set MODEL 7020  }
@@ -174,9 +175,8 @@ source $origin_dir/bd_funcs.tcl
 create_empty_design "" $NGPIO
 
 # Create block design
-if {[string equal $BD "my_mult_axi_lite"] } {
-   add_my_mult_axislite ""
-}
+if { [string equal $BD "my_mult_axi_lite"] } {add_my_mult_axislite "" }
+if { [string equal $BD "dma_loopback"    ] } {add_axi_dma_loopback "" }
 
 # Generate the wrapper
 set design_name [get_bd_designs]
