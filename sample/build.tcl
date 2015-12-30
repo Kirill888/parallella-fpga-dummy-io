@@ -1,27 +1,13 @@
 # Set the reference directory for source file relative paths (by default the value is script directory path)
-set origin_dir "."
-
-# Use origin directory path location variable, if specified in the tcl shell
-if { [info exists ::origin_dir_loc] } {
-  set origin_dir $::origin_dir_loc
-}
+set origin_dir [file dirname [info script]]
 
 variable script_file
 set script_file "build.tcl"
 
+# CHANGE DESIGN NAME HERE
+set design_name top
 
-# Custom variable one can override from inside Vivado TCL shell
-# before sourcing this script
-#
-if { ! [info exists PROJECT_NAME   ]} {set PROJECT_NAME    "my_mult_test"}
-if { ! [info exists MODEL          ]} {set MODEL           7020 }
-if { ! [info exists GEN_EMPTY      ]} {set GEN_EMPTY       0}
-if { ! [info exists IP_REPO        ]} {set IP_REPO         [file normalize {../ip_repo}]}
-if { ! [info exists CONSTRAINTS_DIR]} {set CONSTRAINTS_DIR [file normalize {../constraints} ]}
-
-puts "ROOT: [file normalize $origin_dir]"
-puts "IP_REPO: $IP_REPO"
-puts "CONSTRAINTS_DIR: $CONSTRAINTS_DIR"
+set BD "my_mult_axi_lite"
 
 # Help information for this script
 proc help {} {
@@ -57,10 +43,12 @@ if { $::argc > 0 } {
     switch -regexp -- $option {
       "--origin_dir" { incr i; set origin_dir [lindex $::argv $i] }
       "--name"       { incr i; set PROJECT_NAME [lindex $::argv $i] }
+      "--base"	     { incr i; set BASE [lindex $::argv $i] }
+      "--repo"       { incr i; set IP_REPO [lindex $::argv $i] }
       "--help"       { help }
-      "--7010"       { set MODEL 7010 }
-      "--7020"       { set MODEL 7020 }
-      "--empty"      { set GEN_EMPTY 1}
+      "--7010"       { set MODEL 7010  }
+      "--7020"       { set MODEL 7020  }
+      "--empty"      { set BD "empty" }
       default {
         if { [regexp {^-} $option] } {
           puts "ERROR: Unknown option '$option' specified, please type '$script_file -tclargs --help' for usage info.\n"
@@ -70,6 +58,21 @@ if { $::argc > 0 } {
     }
   }
 }
+
+# Custom variable one can override from inside Vivado TCL shell
+# before sourcing this script
+#
+if { ! [info exists BASE           ]} {set BASE            [file normalize "$origin_dir/.."] }
+if { ! [info exists MODEL          ]} {set MODEL           7020 }
+if { ! [info exists PROJECT_NAME   ]} {set PROJECT_NAME    "my_mult" }
+if { ! [info exists GEN_EMPTY      ]} {set GEN_EMPTY       0 }
+if { ! [info exists IP_REPO        ]} {set IP_REPO         [file normalize "$BASE/ip_repo"     ]}
+if { ! [info exists CONSTRAINTS_DIR]} {set CONSTRAINTS_DIR [file normalize "$BASE/constraints" ]}
+
+puts "ROOT: [file normalize $origin_dir]"
+puts "IP_REPO: $IP_REPO"
+puts "CONSTRAINTS_DIR: $CONSTRAINTS_DIR"
+
 
 if { $MODEL == 7020 } {
     puts "Generating for 7020"
@@ -161,11 +164,18 @@ current_run -implementation [get_runs impl_1]
 
 puts "Generating Block Design"
 
+puts "INFO: Creating <$design_name> in project"
+create_bd_design $design_name
+puts "INFO: Making design <$design_name> as current_bd_design."
+current_bd_design $design_name
+
+source $origin_dir/bd_funcs.tcl
+
+create_empty_design "" $NGPIO
+
 # Create block design
-if { $GEN_EMPTY } {
-    source $origin_dir/bd_top_empty.tcl
-} else {
-    source $origin_dir/bd_top.tcl
+if {[string equal $BD "my_mult_axi_lite"] } {
+   add_my_mult_axislite ""
 }
 
 # Generate the wrapper

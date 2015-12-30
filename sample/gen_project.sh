@@ -19,7 +19,9 @@ EOF
     exit 1
 fi
 
-if vivado -mode batch -source build.tcl -tclargs $@ ; then
+D=$(dirname $0)
+
+if vivado -mode batch -source "$D/build.tcl" -tclargs $@ ; then
     echo "Generated Vivado project"
     echo "Now open project in Vivado and generate bitstream"
 else
