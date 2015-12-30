@@ -149,7 +149,7 @@ proc add_my_mult_axislite { parentCell } {
   current_bd_instance $parentObj
 
   # Create instance: my_multiplier_0, and set properties
-  set my_multiplier_0 [ create_bd_cell -type ip -vlnv kk:user:my_multiplier:1.0 my_multiplier_0 ]
+  set my_multiplier_0 [ create_bd_cell -type ip -vlnv k88k:user:my_multiplier:1.0 my_multiplier_0 ]
 
   set processing_system7_0 [get_bd_cells processing_system7_0]
   set_property -dict [ list CONFIG.PCW_USE_M_AXI_GP0 {1} ] $processing_system7_0

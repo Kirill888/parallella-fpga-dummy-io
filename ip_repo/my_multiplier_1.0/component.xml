@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spirit:component xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <spirit:vendor>kk</spirit:vendor>
+  <spirit:vendor>k88k</spirit:vendor>
   <spirit:library>user</spirit:library>
   <spirit:name>my_multiplier</spirit:name>
   <spirit:version>1.0</spirit:version>
@@ -817,7 +817,7 @@
       <xilinx:coreRevision>2</xilinx:coreRevision>
       <xilinx:coreCreationDateTime>2015-09-13T10:42:22Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
-        <xilinx:tag xilinx:name="kk:user:my_multiplier:1.0_ARCHIVE_LOCATION">/home/kirill/vv/ip_repo/my_multiplier_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="k88k:user:my_multiplier:1.0_ARCHIVE_LOCATION">/home/kirill/vv/ip_repo/my_multiplier_1.0</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
