@@ -88,7 +88,7 @@ if { $MODEL == 7020 } {
 }
     
 
-
+set orig_proj_dir "[file normalize "." ]"
 # Create project
 create_project $PROJECT_NAME ./$PROJECT_NAME
 
@@ -134,12 +134,18 @@ if {[string equal [get_filesets -quiet sim_1] ""]} {
   create_fileset -simset sim_1
 }
 
+# Set 'sim_1' fileset properties
+set obj [get_filesets sim_1]
+set_property "top" "${design_name}_wrapper" $obj
+set_property "xelab.nosort" "1" $obj
+set_property "xelab.unifast" "" $obj
+
 # Create 'synth_1' run (if not found)
 if {[string equal [get_runs -quiet synth_1] ""]} {
-  create_run -name synth_1 -part $PART -flow {Vivado Synthesis 2014} -strategy "Vivado Synthesis Defaults" -constrset constrs_1
+  create_run -name synth_1 -part $PART -flow {Vivado Synthesis 2015} -strategy "Vivado Synthesis Defaults" -constrset constrs_1
 } else {
   set_property strategy "Vivado Synthesis Defaults" [get_runs synth_1]
-  set_property flow "Vivado Synthesis 2014" [get_runs synth_1]
+  set_property flow "Vivado Synthesis 2015" [get_runs synth_1]
 }
 set obj [get_runs synth_1]
 set_property "part" "$PART" $obj
@@ -149,10 +155,10 @@ current_run -synthesis [get_runs synth_1]
 
 # Create 'impl_1' run (if not found)
 if {[string equal [get_runs -quiet impl_1] ""]} {
-  create_run -name impl_1 -part $PART -flow {Vivado Implementation 2014} -strategy "Vivado Implementation Defaults" -constrset constrs_1 -parent_run synth_1
+  create_run -name impl_1 -part $PART -flow {Vivado Implementation 2015} -strategy "Vivado Implementation Defaults" -constrset constrs_1 -parent_run synth_1
 } else {
   set_property strategy "Vivado Implementation Defaults" [get_runs impl_1]
-  set_property flow "Vivado Implementation 2014" [get_runs impl_1]
+  set_property flow "Vivado Implementation 2015" [get_runs impl_1]
 }
 set obj [get_runs impl_1]
 set_property "part" "$PART" $obj
@@ -184,6 +190,6 @@ make_wrapper -files [get_files $design_name.bd] -top -import
 
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]
-set_property "top" "top" $obj
+set_property "top" "${design_name}_wrapper" $obj
 
 puts "INFO: Project created:$PROJECT_NAME"
