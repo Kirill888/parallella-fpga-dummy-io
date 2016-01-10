@@ -1,4 +1,4 @@
-CFLAGS=-std=c99 -Wall -g
+CFLAGS=-std=c99 -Wall -Wextra -g
 
 all: uio_mult_test
 

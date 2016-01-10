@@ -8,6 +8,16 @@
 
 int main(int argc, char *argv[])
 {
+    (void) argc; (void) argv;
+
+#ifdef USE_HLS
+    const size_t IN  = 0x10/4;
+    const size_t OUT = 0x18/4;
+#else    
+    const size_t IN  = 0;
+    const size_t OUT = 1;
+#endif    
+    
     size_t len = 1<<(10+2); //4K
 
     int fd = open("/dev/uio0", O_SYNC|O_RDWR);
@@ -53,11 +63,11 @@ int main(int argc, char *argv[])
 	    continue;
 	}
 
-	p[0] = (a<<16)|(b);
+	p[IN] = (a<<16)|(b);
 
-	uint32_t result = p[1];
+	uint32_t result = p[OUT];
 
-	printf("%08x  => %08x (%5u) expect: %5u\n", p[0], result, result, a*b);
+	printf("%08x  => %08x (%5u) expect: %5u\n", p[IN], result, result, a*b);
     }
 
     printf("Final memory state:\n");

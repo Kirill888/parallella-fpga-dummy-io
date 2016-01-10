@@ -7,3 +7,4 @@ vivado.log
 /sample/webtalk.log
 /sample/.Xil/
 /sample/parallella.bit
+/sample/test_app/uio_mult_test
