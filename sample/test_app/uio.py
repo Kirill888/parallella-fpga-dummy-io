@@ -57,8 +57,6 @@ class UIO:
         return None
 
 
-
-
     def __init__(self, idx):
         import mmap
         import os
@@ -110,7 +108,7 @@ class UIO:
 
 
     def phy(self, arg=None):
-        """ Return physical memory value
+        """ Return physical memory address
 
             no-args          -> base address of the device
             integer argument -> base address plus byte offset
@@ -128,20 +126,37 @@ class UIO:
 
         raise TypeError('Supported types: None, int,long, and numpy.ndarray')
 
-
-    def wait_for_interrupt(self):
-        """ Blocking, returns number of interrupts that happened since last
-            time this function was called, or since creation time in
-            case of the first call.
-
+    def phy_buf(self, a):
+        """ Returns (phy_addr, sz) tuple from ndarray
         """
+        return ( self.virt2phy( UIO._ptr(a) ) , a.nbytes )
+
+
+    def _write(self, v):
         import os
         import struct
 
-        os.write(self._fd, struct.pack('@I',1))
-        e_count = struct.unpack('@I', os.read(self._fd,4) )[0]
+        os.write(self._fd, struct.pack('@I',v))
+
+    def _read(self):
+        import os
+        import struct
+        return struct.unpack('@I', os.read(self._fd, 4) )[0]
+
+    def enable_interrupts(self):
+        self._write(1)
+
+    def wait_for_interrupt(self, reenable=True):
+        """ Blocking, returns number of interrupts that happened since last
+            time this function was called, or since creation time in
+            case of the very first call.
+        """
+        e_count = self._read()
         e_diff = e_count - self._event_count
         self._event_count = e_count
+
+        if reenable:
+            self.enable_interrupts()
 
         return e_diff
 

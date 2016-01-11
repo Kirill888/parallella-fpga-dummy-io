@@ -3,8 +3,10 @@ vivado.log
 *.backup.log
 *.backup.jou
 *~
+*.pyc
 /sample/webtalk.jou
 /sample/webtalk.log
 /sample/.Xil/
 /sample/parallella.bit
 /sample/test_app/uio_mult_test
+.ipynb_checkpoints
