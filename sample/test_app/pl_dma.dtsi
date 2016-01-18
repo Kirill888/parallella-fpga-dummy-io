@@ -1,0 +1,34 @@
+/ {
+
+	scratch_mem@3e000000 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		reg = <0x3e000000 0x2000000>;
+		compatible = "generic-uio";
+		interrupts = < 0 58 0 >; //< Needed for older versions of uio driver, it's fake, make sure doesn't clash with
+		interrupt-parent = <0x1>;
+	};
+
+	amba_pl: amba_pl {
+		ranges;
+		#size-cells = <0x1>;
+		#address-cells = <0x1>;
+		compatible = "simple-bus";
+
+		my_mult@70020000 {
+			reg = <0x70020000 0x1000>;
+			compatible = "generic-uio";
+			interrupts = < 0 57 0 >; //< fake but needed for older versions of uio driver
+			interrupt-parent = <0x1>;
+		};
+
+		axi_dma_0: dma@40400000 {
+			#dma-cells = <1>;
+			compatible = "generic-uio";
+			interrupt-parent = <0x1>;
+			interrupts = <0 29 4 0 30 4>;
+			reg = <0x40400000 0x10000>;
+		};
+
+	};
+};
