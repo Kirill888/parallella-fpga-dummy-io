@@ -13,14 +13,15 @@ test program.
 
 # Prerequisites
 
-Working installation of Vivado 2015.3, preferably on a 64-bit Ubuntu
-14.04, as this is what I tested with. Some of the bash scripts won't
-work on Windows, but project generation TCL scripts should work just
-fine, but keep in mind that I do not have a windows machine to verify
-that claim. Installation of Vivado tools is not covered in this
-tutorial. NOTE: when installing Vivado make sure to include SDK in the
-installation, if you already have Vivado installed but without SDK you
-can update your installation without doing clean install:
+Working installation of Vivado 2015.3 or 2015.4, preferably on a
+64-bit Ubuntu 14.04, as this is what I tested with. Some of the bash
+scripts won't work on Windows, but project generation TCL scripts
+should work just fine, but keep in mind that I do not have a windows
+machine to verify that claim. Installation of Vivado tools is not
+covered in this tutorial. NOTE: when installing Vivado make sure to
+include SDK in the installation, if you already have Vivado installed
+but without SDK you can update your installation without doing clean
+install:
 
     Menu: Help> Add Design Tools and Devices...
 
@@ -89,13 +90,7 @@ Assuming everything above worked fine you can now generate Bitstream.
 3. Dialog will pop-up saying that synthesis and implementation need to run first, agree to that.
 4. Wait for completion
 5. Export Bitstream `File> Export Hardware> Export Bitstream File`
-6. Save it to this folder and name it `parallella.bit`
-
-We are not done yet, we still need to convert that file to
-`parallella.bit.bin` in order to load it to the FPGA. `bootgen`
-utility is used for that. There is a script `gen_bootbin.sh` that
-takes care of the steps involved. Just run it after exporting
-`parallalla.bit` file.
+6. Save it to this folder and name it `my_test.bit`
 
 
 ## Testing new Bitstream
@@ -111,9 +106,8 @@ before loading new Bitstream for testing:
 
     sudo service parallella-thermald stop
 
-Transfer your version of `parallella.bit.bin` to your parallella
-board, do not overwrite original one, put it somewhere under
-`$HOME`. Also copy `test_app` folder to parallella board.
+Transfer `my_test.bit` to your parallella board, put it somewhere
+under `$HOME`. Also copy `test_app` folder to parallella board.
 
 ### Patching Device Tree
 
@@ -197,13 +191,25 @@ This should produce an executable called `uio_mult_test`. We now need to load ou
     sudo service parallella-thermald stop
     #
     # Load new Bitstream to FPGA
-    sudo dd if=parallella.bit.bin of=/dev/xdevcfg
+    sudo dd if=my_test.bit of=/dev/xdevcfg
     
 We can now run the test app:
 
     sudo ./uio_mult_test
 
 Follow instructions, observe results.
+
+### Loading bitstream on boot
+
+While you can load `my_test.bit` on Linux unmodified, you can not do
+the same during boot, extra pre-processing step is needed. It is done
+using `bootgen` utility from Xilinx. There is a script
+`gen_bootbin.sh` that invokes `bootgen`. To run it do:
+
+1. Rename `my_test.bit` to `parallella.bit`
+2. Run `./gen_bootbin.sh` to create `parallella.bit.bin`
+3. Copy `parallella.bit.bin` to sd-card's `boot` partition
+
 
 # TODO
 
