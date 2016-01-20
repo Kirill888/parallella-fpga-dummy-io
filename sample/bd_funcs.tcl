@@ -209,7 +209,7 @@ proc add_axi_dma_loopback { parentCell } {
      CONFIG.c_mm2s_burst_size {256} \
      CONFIG.c_s2mm_burst_size {256} \
      CONFIG.c_sg_include_stscntrl_strm {0} \
-     CONFIG.c_sg_length_width {20} \
+     CONFIG.c_sg_length_width {23} \
   ] $axi_dma_0
 
   # Create instance: axi_mem_intercon, and set properties
