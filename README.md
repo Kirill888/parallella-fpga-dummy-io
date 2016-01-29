@@ -12,7 +12,7 @@ interconnect is developed in the open
 
 Minimal project does not include eLink interface needed to communicate
 with the Epiphany chip. It only contains I2C block to setup power
-controllers for Epihpany chip and GPIO pass-through block. So Epiphany
+controllers for Epiphany chip and GPIO pass-through block. So Epiphany
 will not be usable if you use this project as basis for your design,
 but on a plus side you will get much quicker synthesis times. The idea
 is that you can iterate on your design faster and then integrate it
@@ -20,8 +20,8 @@ with the rest of the system.
 
 # How to use
 
-This was developed with Vivado 2015.3 version. If you want to use scripts
-that generate projects then you'll need to use exactly that version.
+This was developed with Vivado 2015.4. Scripts might work with other
+versions also, but this is not guaranteed.
 
 
 ## Manually
@@ -38,13 +38,13 @@ Adapteva. See `constraints` folder.
 
 ## Generate project with scripts
 
-Folder `sample` contains scripts to generate a sample project. See
-readme in that folder for more detail:
+Folder `sample` contains instructions for generating a sample
+project. See readme in that folder for more detail:
 
-    cd sample
     source ${PathToXilinxSettingsFile}
-    ./gen_project --name test1 --7010
-    ./gen_project --name test2 --7020
+    cd sample
+    ../scripts/gen_project.sh --name test1 --7010
+    ../scripts/gen_project.sh --name test2 --7020
 
 
 

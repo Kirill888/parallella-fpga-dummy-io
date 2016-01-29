@@ -4,7 +4,7 @@ source "$orig_dir/bd_funcs.tcl"
 
 
 
-proc mk_proj { name {model 7010} {out_dir .} } {
+proc mk_proj { name {model 7020} {out_dir .} } {
     set base_dir        [file normalize $::orig_dir/.. ]
     set ip_repo_dir     [file normalize "$base_dir/ip_repo"]
     set constraints_dir [file normalize "$base_dir/constraints"]

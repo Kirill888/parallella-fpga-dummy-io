@@ -63,17 +63,18 @@ There are two ways to use provided scripts
 
 Use `gen_project.sh` to run Vivado in batch mode:
 
-- `./gen_project.sh --name my_test --7010`
-- `./gen_project.sh --name my_test_7020 --7020`
+- `../scripts/gen_project.sh --bd my_mult_axislite --name my_test --7010`
+- `../scripts/gen_project.sh --bd my_mult_axislite --name my_test_7020 --7020`
 
 
 Invoke script from tcl shell of Vivado
 
-    cd "path to this folder"
+    cd "path to scripts folder"
     pwd
-    set PROJECT_NAME "my_test"
-    set MODEL 7010
-    source build.tcl
+    source proj_funcs.tcl
+    mk_proj my_test 7010
+    add_my_mult_axislite ""
+    make_wrapper -force -files [get_files [get_bd_designs].bd] -top -import
 
 When this is done you can open the project in Vivado, if you used
 second method it will already be open. Your block design should look
@@ -207,7 +208,7 @@ using `bootgen` utility from Xilinx. There is a script
 `gen_bootbin.sh` that invokes `bootgen`. To run it do:
 
 1. Rename `my_test.bit` to `parallella.bit`
-2. Run `./gen_bootbin.sh` to create `parallella.bit.bin`
+2. Run `../scripts/gen_bootbin.sh` to create `parallella.bit.bin`
 3. Copy `parallella.bit.bin` to sd-card's `boot` partition
 
 
