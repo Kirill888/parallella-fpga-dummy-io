@@ -150,12 +150,13 @@ Load new bitstream
     sudo dd if=my_dma_test.bit of=/dev/xdevcfg
 
 Now you can run the test
+
     sudo ./test_dma.py
 
 
 # Under the hood
 
-## Memory - Vritual vs Physical
+## Memory - Virtual vs Physical
 
 First make sure you understand the difference between virtual and
 physical memory, no need to have a fine grained understanding of the
@@ -174,13 +175,13 @@ Here is a brief, incomplete view of the world that should get you started:
 So we have a bit of a dilemma: we need physical addresses to talk to
 FPGA, but we only get virtual addresses in our C program running under
 Linux. We resolve this by creating a memory mapping using `mmap` on a
-special device (/dev/uio1 in this example).
+special device (`/dev/uio1` in this example).
 
 By changing device tree we requested UIO driver to expose 64K of
 physical address range starting at address 0x4040_0000 to any user
 process who asks (so long as the process has the correct
 permissions). Now when we open `/dev/uio1` device and call `mmap` on
-the file descriptor it we get a virtual memory address that points to
+the file descriptor we get a virtual memory address that points to
 physical memory at address 0x4040_0000. We can now read and write
 using virtual address pointer to a physical addresses starting from
 0x4040_0000.
@@ -203,10 +204,10 @@ buggy application.
 
 ## Code overview
 
-There three python files in this example
+There are three python files in this example
 
 1. `uio.py` provides UIO class that abstracts interactions with UIO driver
-2. `axidma.py` provides AxiDMA class that abstract AXI DMA IP as expose by UIO driver
+2. `axidma.py` provides AxiDMA class that abstract AXI DMA IP as exposed by the UIO driver
 3. `test_dma.py` ties it all together by running a simple test
 
 UIO class provides easy access to `/dev/uio?` devices, does discovery
@@ -219,7 +220,7 @@ interfacing with the DMA IP. Axi DMA IP has two sub-component: MM2S
 and S2MM. MM2S reads data from memory mapped device (of which DDR is
 but a special case) and copies it into an AXI stream, and S2MM
 consumes an AXI stream and writes it's content to a memory mapped
-device or DDR. Both have identical interface, consisting of
+device or DDR. Both have identical interfaces, consisting of
 
 1. Control register -- reset, enable, control interrupt generation logic
 2. Status register
@@ -271,8 +272,8 @@ In the next installment we will look in using High Level Synthesis (HLS) to crea
 
 # References
 
-http://lauri.võsandi.com/hdl/zynq/xilinx-dma.html
-http://www.fpgadeveloper.com/2014/08/using-the-axi-dma-in-vivado.html
+- http://lauri.võsandi.com/hdl/zynq/xilinx-dma.html
+- http://www.fpgadeveloper.com/2014/08/using-the-axi-dma-in-vivado.html
 
 
 
