@@ -15,13 +15,6 @@
 		#address-cells = <0x1>;
 		compatible = "simple-bus";
 
-		my_mult@70020000 {
-			reg = <0x70020000 0x1000>;
-			compatible = "generic-uio";
-			interrupts = < 0 57 0 >; //< fake but needed for older versions of uio driver
-			interrupt-parent = <0x1>;
-		};
-
 		axi_dma_0: dma@40400000 {
 			#dma-cells = <1>;
 			compatible = "generic-uio";
