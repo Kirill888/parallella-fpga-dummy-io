@@ -263,7 +263,7 @@ containing a 32-bit value of 1 into the file descriptor.
 # Next Steps
 
 CPU off-loaded memory copy might be of some value, but there are
-better ways to achieve this tastk on Zynq (lookup pl330). The same
+better ways to achieve this task on Zynq (look up pl330). The same
 techniques used in this example can be applied to designs where data
 is modified in some non-trivial way by the PL.
 
