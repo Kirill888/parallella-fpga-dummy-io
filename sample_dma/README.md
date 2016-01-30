@@ -22,7 +22,7 @@ package is used. On parallella board:
     sudo apt-get install python python-numpy
 
 
-# Overview of the steps involved
+# Overview of the Steps Involved
 
 
 1. Generate Vivado Project
@@ -31,7 +31,7 @@ package is used. On parallella board:
 4. Load bitstream
 5. Run test app (Python based)
 
-## Generate sample project for Vivado
+## Generate Sample Project for Vivado
 
 There are two ways to use provided scripts
 
@@ -154,7 +154,7 @@ Now you can run the test
     sudo ./test_dma.py
 
 
-# Under the hood
+# Under the Hood
 
 ## Memory - Virtual vs Physical
 
@@ -202,7 +202,7 @@ which is easier still (no need to change devicetree), but more unsafe
 as the entire address space of the system is exposed to a possibly
 buggy application.
 
-## Code overview
+## Code Overview
 
 There are three python files in this example
 

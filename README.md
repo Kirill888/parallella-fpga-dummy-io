@@ -18,7 +18,7 @@ but on a plus side you will get much quicker synthesis times. The idea
 is that you can iterate on your design faster and then integrate it
 with the rest of the system.
 
-# How to use
+# How to Use
 
 This was developed with Vivado 2015.4. Scripts might work with other
 versions also, but this is not guaranteed.
@@ -36,7 +36,7 @@ you are targeting 7010 based board you have to change num GPIO pair to
 Don't forget to also include constraints files supplied by
 Adapteva. See `constraints` folder.
 
-## Generate project with scripts
+## Generate Project with Scripts
 
 Folder `sample` contains instructions for generating a sample
 project. See readme in that folder for more detail:
@@ -46,6 +46,14 @@ project. See readme in that folder for more detail:
     ../scripts/gen_project.sh --name test1 --7010
     ../scripts/gen_project.sh --name test2 --7020
 
+
+# Tutorials
+
+Check out these tutorials that walk you through creating sample
+designs and testing from Linux
+
+- [AXI Lite Multiplier](sample/README.md)
+- [Using AXI DMA](sample_dma/README.md)
 
 
 # LICENSE

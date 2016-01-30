@@ -25,7 +25,7 @@ install:
 
     Menu: Help> Add Design Tools and Devices...
 
-# Overview of the steps involved
+# Overview of the Steps Involved
 
 
 1. Generate sample Vivado Project
@@ -35,7 +35,7 @@ install:
 5. Load bitstream
 6. Run test app
 
-## Generate sample project for Vivado
+## Generate Sample Project for Vivado
 
 Vivado projects are complex large beasts full of opaque files, this
 makes it difficult to share and to version control. These two
@@ -200,7 +200,7 @@ We can now run the test app:
 
 Follow instructions, observe results.
 
-### Loading bitstream on boot
+### Loading Bitstream on Boot
 
 While you can load `my_test.bit` on Linux unmodified, you can not do
 the same during boot, extra pre-processing step is needed. It is done
@@ -213,7 +213,7 @@ using `bootgen` utility from Xilinx. There is a script
 
 # Next Steps
 
-Check out the next tutorial: [Using DMA](../sample_dma/README.md)
+Check out the next tutorial: [Using AXI DMA](../sample_dma/README.md)
 
 
 # TODO
