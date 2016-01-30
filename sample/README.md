@@ -211,6 +211,10 @@ using `bootgen` utility from Xilinx. There is a script
 2. Run `../scripts/gen_bootbin.sh` to create `parallella.bit.bin`
 3. Copy `parallella.bit.bin` to sd-card's `boot` partition
 
+# Next Steps
+
+Check out the next tutorial: [Using DMA](../sample_dma/README.md)
+
 
 # TODO
 
@@ -220,3 +224,4 @@ actions performed above
 1. Explain memory mapped device concept
 2. Explain UIO and reasons behind using that (virtual addresses vs actual addresses under Linux)
 3. Explain specifics of the my_mult device
+
