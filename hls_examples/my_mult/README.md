@@ -2,17 +2,49 @@
 
 This is incomplete for now
 
+# Code Walk Through
+
+The function
+
+    void my_mult_axis(uint32_t const * S_AXIS, uint32_t * D_AXIS)
+    {
+	uint32_t v = *S_AXIS;
+
+	uint16_t a = v>>16;
+	uint16_t b = v&0xFFFF;
+
+	uint32_t r = a*b;
+
+	*D_AXIS = r;
+    }
+
+1. Read  32 bits from the input stream
+2. Split hi/low 16 bits into variables `a` and `b`
+3. Compute product of `a*b` (32 bits)
+4. Write result to the output stream
+
 
 # Steps
 
-Creating Vivado HLS project and building IP
+Creating Vivado HLS project and building IP:
 
     vivado_hls -f ./gen_project.tcl
 
 
+Open vivado hls project:
+
+    vivado_hls -p my_mult_axis
+
+Things to try:
+
+1. `Project > Run C Simulation`
+2. Look through reports: `syn/report/<...>.rpt`
+3. Step through C simulation with debugger
+4. Checkout "Analysis" Perspective
+
 Creating Vivado Project
 
-    ../scripts/gen_project.sh --name dma_mult_test --bd dma_loopback --7010
+    ../../scripts/gen_project.sh --name dma_mult_test --bd dma_loopback --7010
 
 Then add IP Repo (`./my_mult_axis/axis/impl/ip/`) to the project, and
 replace `axis_data_fifo` with `my_mult_axis` in the block design.
