@@ -1,0 +1,35 @@
+#!/bin/sh
+
+set -e
+
+write_to () {
+    echo $2 | sudo tee $1 > /dev/null
+}
+
+set_rate () {
+    c=fclk$1
+    rate=$2
+
+    d=$(readlink -f "/sys/class/xdevcfg/xdevcfg/device")
+
+    [ -d $d/fclk/$c ] || write_to $d/fclk_export $c
+
+    write_to $d/fclk/$c/enable 1
+    write_to $d/fclk/$c/set_rate $rate
+
+    echo "Set clock $c to " $(cat $d/fclk/$c/set_rate)
+}
+
+CLK=$1
+FREQ=$2
+
+if [ -z $CLK ] || [ -z $FREQ ]; then
+   cat <<EOL
+  Usage:  $0 clk freq
+	clk  -- Which clock to change 0,1,2 or 3
+	freq -- Desired frequency in Hz
+EOL
+    exit 1
+fi
+
+set_rate $CLK $FREQ
