@@ -14,7 +14,7 @@ def report_stats(dt, n_in, n_out, item_sz = 4):
     print('Took      : %g ms'%(dt*1e+3))
     print('Per item  : %g us'%((dt*1e+6)/N ))
     print('Items/s   : %.1f' %(N/dt))
-    print('Throughput: %g Mb(in) + %g Mb(out) = %g Mb/s'%(mbps[0], mbps[1], mbps[2]))
+    print('Throughput: %g Mb/s(in) + %g Mb/s(out) = %g Mb/s'%(mbps[0], mbps[1], mbps[2]))
 
 def mult_model(src):
     """ Model of the computation performed by PL
