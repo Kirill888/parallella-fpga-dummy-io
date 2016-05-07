@@ -212,9 +212,7 @@ Follow instructions, observe results.
 Updated kernel from Adapteva no longer includes UIO driver by default, and is
 also missing Xilinx FGPA driver. You can either use older release of the kernel
 that this was tested with, or you can compile a new one. Compiling new kernel
-is relatively straightforward, see here:
-
-(https://github.com/Kirill888/parallella-fpga-dummy-io/tree/master/kernel)[https://github.com/Kirill888/parallella-fpga-dummy-io/tree/master/kernel]
+is relatively straightforward: [see here](https://github.com/Kirill888/parallella-fpga-dummy-io/tree/master/kernel)
 
 ### Loading Bitstream on Boot
 
