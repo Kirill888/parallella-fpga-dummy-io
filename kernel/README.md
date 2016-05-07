@@ -27,6 +27,7 @@ Make sure you have right tools installed (Assuming modern enough Ubuntu)
    sudo apt install \
       build-essential \
       gcc-arm-linux-gnueabihf \
+      u-boot-tools \
       bc
 ```
 
