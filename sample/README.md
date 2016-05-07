@@ -132,7 +132,8 @@ Use `dtc` to dump content of the device tree currently used by the kernel to a f
 
 Create file `pl.dtsi` with the following content (also included in `test_app` folder)
 
-    / {
+```
+/{
 	amba_pl {
 		compatible = "simple-bus";
 		#address-cells = <0x1>;
@@ -143,14 +144,20 @@ Create file `pl.dtsi` with the following content (also included in `test_app` fo
 			compatible = "generic-uio";
 			reg = < 0x70020000 0x1000 >;
 			interrupts = < 0 57 0 >;
-			interrupt-parent = <0x1>;
+ 			interrupt-parent = <0x1>;
 		};
 	};
-    };
+};
+```
 
 Then add line to `devicetree.dts` file you just generated:
 
     /include/ "pl.dtsi"
+
+With newer kernels UIO driver no longer recognizes `"generic-uio"` by default,
+so you need add extra argument to the linux kernel command line. Add this to
+`bootargs` parameter in the device tree: `uio_pdrv_genirq.of_id=generic-uio`
+
 
 After that compile device tree to binary format:
 
@@ -199,6 +206,15 @@ We can now run the test app:
     sudo ./uio_mult_test
 
 Follow instructions, observe results.
+
+### Notes about Linux Kernel
+
+Updated kernel from Adapteva no longer includes UIO driver by default, and is
+also missing Xilinx FGPA driver. You can either use older release of the kernel
+that this was tested with, or you can compile a new one. Compiling new kernel
+is relatively straightforward, see here:
+
+(https://github.com/Kirill888/parallella-fpga-dummy-io/tree/master/kernel)[https://github.com/Kirill888/parallella-fpga-dummy-io/tree/master/kernel]
 
 ### Loading Bitstream on Boot
 
