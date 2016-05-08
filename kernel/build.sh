@@ -35,10 +35,14 @@ build_linux () {
    $mk -j2
    $mk uImage
    mkdir -p $R/boot
-   cp $B/arch/arm/boot/uImage $R/boot/uImage-4.4.xlnx
+   cp $B/arch/arm/boot/uImage $R/boot/uImage-4.4.0-xlnx
 
    $mk modules_install INSTALL_MOD_PATH=$R
-   $mk headers_install INSTALL_HDR_PATH=$R/usr/src/linux-headers-4.4.xlnx/
+   $mk headers_install INSTALL_HDR_PATH=$R/usr/src/linux-headers-4.4.0-xlnx/
+}
+
+package_tgz () {
+    tar cvzf $1 --owner=root --group=root -C $R .
 }
 
 cat <<EOL
@@ -57,5 +61,6 @@ if [ ! -d $L ]; then
 fi
 
 build_linux
-echo "Look here: $R"
+package_tgz linux-image-4.4.0-xlnx.tgz
+echo "Created: linux-image-4.4.0-xlnx.tgz"
 
