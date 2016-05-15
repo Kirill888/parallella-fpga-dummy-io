@@ -1,11 +1,14 @@
 / {
+  chosen {
+    bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait uio_pdrv_genirq.of_id=generic-uio";
+  };
 
 	scratch_mem@3e000000 {
 		#address-cells = <1>;
 		#size-cells = <1>;
 		reg = <0x3e000000 0x2000000>;
 		compatible = "generic-uio";
-		interrupts = < 0 58 0 >; //< Needed for older versions of uio driver, it's fake, make sure doesn't clash with
+		interrupts = < 0 58 0 >; //< Needed for older versions of uio driver, it's fake, make sure doesn't clash with anything
 		interrupt-parent = <0x1>;
 	};
 

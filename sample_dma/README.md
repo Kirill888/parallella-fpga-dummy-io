@@ -91,35 +91,38 @@ under `$HOME`. Also copy `sample_dma` folder to parallella board.
 
 Inject this into the devicetree (`pl_dma.dtsi`), follow instruction in [sample multiplier accelerator example](../sample/README.md)
 
-    / {
-    
-        scratch_mem@3e000000 {
-                #address-cells = <1>;
-                #size-cells = <1>;
-                reg = <0x3e000000 0x2000000>;
-                compatible = "generic-uio";
-                interrupts = < 0 58 0 >; //< Needed for older versions of uio driver, it's fake
-		                         //< make sure doesn't clash with other interrupts in your design
-                interrupt-parent = <0x1>;
-        };
-    
-        amba_pl: amba_pl {
-                ranges;
-                #size-cells = <0x1>;
-                #address-cells = <0x1>;
-                compatible = "simple-bus";
-    
-                axi_dma_0: dma@40400000 {
-                        #dma-cells = <1>;
-                        compatible = "generic-uio";
-                        interrupt-parent = <0x1>;
-                        interrupts = <0 29 4 0 30 4>;
-                        reg = <0x40400000 0x10000>;
-                };
-    
-        };
-    };
+```
+/ {
+  chosen {
+    bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait uio_pdrv_genirq.of_id=generic-uio";
+  };
 
+	scratch_mem@3e000000 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		reg = <0x3e000000 0x2000000>;
+		compatible = "generic-uio";
+		interrupts = < 0 58 0 >; //< Needed for older versions of uio driver, it's fake, make sure doesn't clash with anything
+		interrupt-parent = <0x1>;
+	};
+
+	amba_pl: amba_pl {
+		ranges;
+		#size-cells = <0x1>;
+		#address-cells = <0x1>;
+		compatible = "simple-bus";
+
+		axi_dma_0: dma@40400000 {
+			#dma-cells = <1>;
+			compatible = "generic-uio";
+			interrupt-parent = <0x1>;
+			interrupts = <0 29 4 0 30 4>;
+			reg = <0x40400000 0x10000>;
+		};
+
+	};
+};
+```
 
 What this achieves is: we are telling UIO driver to create two UIO
 devices, first device `scratch_mem` exposes reserved memory at the top
@@ -143,11 +146,14 @@ Verify that UIO driver picked up our new devices:
 
 Load new bitstream
 
-    # Make sure eLink is not being used
-    sudo service parallella-thermald stop
-    #
-    # Load new Bitstream to FPGA
-    sudo dd if=my_dma_test.bit of=/dev/xdevcfg
+```
+# Make sure eLink is not being used
+sudo systemctl stop parallella-thermald@epiphany-mesh0.service
+sudo rmmod epiphany
+#
+# Load new Bitstream to FPGA
+sudo dd if=my_dma_test.bit of=/dev/xdevcfg
+```
 
 Now you can run the test
 

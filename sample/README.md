@@ -105,7 +105,10 @@ kernel crash, as eLink driver tries to write to addresses that do not
 exist. We will therefore need to shutdown parallella thermal service,
 before loading new Bitstream for testing:
 
-    sudo service parallella-thermald stop
+```
+sudo systemctl stop parallella-thermald@epiphany-mesh0.service
+sudo rmmod epiphany
+```
 
 Transfer `my_test.bit` to your parallella board, put it somewhere
 under `$HOME`. Also copy `test_app` folder to parallella board.
@@ -126,38 +129,44 @@ On parallella install `dtc` utility:
 
     sudo apt-get install device-tree-compiler
 
-Use `dtc` to dump content of the device tree currently used by the kernel to a file
 
-    dtc -I fs -O dts /proc/device-tree -o devicetree.dts
-
-Create file `pl.dtsi` with the following content (also included in `test_app` folder)
+Create file `custom.dtsi` with the following content (also included in `test_app` folder)
 
 ```
-/{
-	amba_pl {
-		compatible = "simple-bus";
-		#address-cells = <0x1>;
-		#size-cells = <0x1>;
-		ranges;
+{
+  chosen {
+    bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait uio_pdrv_genirq.of_id=generic-uio";
+  };
 
-		my_mult@70020000 {
-			compatible = "generic-uio";
-			reg = < 0x70020000 0x1000 >;
-			interrupts = < 0 57 0 >;
- 			interrupt-parent = <0x1>;
-		};
-	};
+  amba_pl {
+    compatible = "simple-bus";
+    #address-cells = <0x1>;
+    #size-cells = <0x1>;
+    ranges;
+
+    my_mult@70020000 {
+      compatible = "generic-uio";
+      reg = < 0x70020000 0x1000 >;
+      interrupts = < 0 57 0 >;
+      interrupt-parent = <0x1>;
+    };
+  };
 };
 ```
 
-Then add line to `devicetree.dts` file you just generated:
-
-    /include/ "pl.dtsi"
-
 With newer kernels UIO driver no longer recognizes `"generic-uio"` by default,
-so you need add extra argument to the linux kernel command line. Add this to
-`bootargs` parameter in the device tree: `uio_pdrv_genirq.of_id=generic-uio`
+so you we add extra argument to the linux kernel command line: `uio_pdrv_genirq.of_id=generic-uio`
 
+Use `dtc` to dump content of the device tree currently used by the kernel to a file
+
+```
+dtc -I fs -O dts /proc/device-tree -o devicetree.dts
+echo '/include/ "custom.dtsi";' >> devicetree.dts
+```
+
+Script above also adds this line to `devicetree.dts`
+
+    /include/ "custom.dtsi";
 
 After that compile device tree to binary format:
 
@@ -166,11 +175,13 @@ After that compile device tree to binary format:
 Next, replace `devicetree.dtb` on the boot partition with the new one
 you just generated, make sure to backup the original.
 
-    sudo mount /dev/mmcblk0p1 /boot
-    sudo cp /boot/devicetree.dtb /boot/devicetree.dtb.orig
-    sudo cp devicetree.dtb /boot/devicetree.dtb
-    sudo sync
-    sudo umount /boot
+```
+sudo mount /dev/mmcblk0p1 /boot
+sudo cp /boot/devicetree.dtb /boot/devicetree.dtb.orig
+sudo cp devicetree.dtb /boot/devicetree.dtb
+sudo sync
+sudo umount /boot
+```
 
 Then reboot parallella. After reboot verify that new device tree is
 being used:
@@ -195,11 +206,15 @@ reader.
 
 This should produce an executable called `uio_mult_test`. We now need to load our custom Bitstream
 
-    # Make sure eLink is not being used
-    sudo service parallella-thermald stop
-    #
-    # Load new Bitstream to FPGA
-    sudo dd if=my_test.bit of=/dev/xdevcfg
+```
+# Make sure eLink is not being used
+sudo systemctl stop parallella-thermald@epiphany-mesh0.service
+sudo rmmod epiphany
+#
+# Load new Bitstream to FPGA
+sudo dd if=my_test.bit of=/dev/xdevcfg
+
+```
     
 We can now run the test app:
 
@@ -209,10 +224,16 @@ Follow instructions, observe results.
 
 ### Notes about Linux Kernel
 
-Updated kernel from Adapteva no longer includes UIO driver by default, and is
-also missing Xilinx FGPA driver. You can either use older release of the kernel
-that this was tested with, or you can compile a new one. Compiling new kernel
-is relatively straightforward: [see here](https://github.com/Kirill888/parallella-fpga-dummy-io/tree/master/kernel)
+Depending on the version of the kernel you currently have you might or might not
+have UIO drivers available. Also, release 2016.3 had xdevcfg missing, but it was
+added in 2016.3.1 release.
+
+You can either use older release of the kernel that this was originally
+developed with, or you can
+[compile UIO drivers](https://parallella.org/forums/viewtopic.php?f=48&t=3683)
+for the current official kernel you use, or you can compile a new kernel with
+needed drivers. Compiling new kernel is relatively straightforward:
+[see here](https://github.com/Kirill888/parallella-fpga-dummy-io/tree/master/kernel)
 
 ### Loading Bitstream on Boot
 

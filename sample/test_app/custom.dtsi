@@ -1,0 +1,19 @@
+{
+  chosen {
+    bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait uio_pdrv_genirq.of_id=generic-uio";
+  };
+
+  amba_pl {
+    compatible = "simple-bus";
+    #address-cells = <0x1>;
+    #size-cells = <0x1>;
+    ranges;
+
+    my_mult@70020000 {
+      compatible = "generic-uio";
+      reg = < 0x70020000 0x1000 >;
+      interrupts = < 0 57 0 >;
+      interrupt-parent = <0x1>;
+    };
+  };
+};
