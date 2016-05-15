@@ -155,7 +155,7 @@ Create file `custom.dtsi` with the following content (also included in `test_app
 ```
 
 With newer kernels UIO driver no longer recognizes `"generic-uio"` by default,
-so you we add extra argument to the linux kernel command line: `uio_pdrv_genirq.of_id=generic-uio`
+so we add extra argument to the linux kernel command line: `uio_pdrv_genirq.of_id=generic-uio`
 
 Use `dtc` to dump content of the device tree currently used by the kernel to a file
 
